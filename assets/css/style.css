@@ -240,6 +240,13 @@ a {
     transition: var(--transition-fast);
     border-radius: 2px;
 }
+.mode-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
 
 /* ==========================================================================
    4. HERO SECTIONS & BANNERS
