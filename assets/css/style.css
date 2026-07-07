@@ -1043,3 +1043,407 @@ a {
     .card { padding: 24px; }
     .btn { width: 100%; padding: 14px 20px; }
 }
+/* ==========================================================================
+   PERBAIKAN TATA LETAK GRID TIER (DIJAMIN MUAT & RESPONSIF)
+   ========================================================================== */
+.player-tiers-grid {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Memperkecil jarak antar kotak gamemode agar hemat ruang */
+    flex-grow: 1;
+    justify-content: center;
+    flex-wrap: nowrap; /* Mencegah baris patah di desktop */
+}
+
+.tier-cell {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 4px 8px; /* Memperkecil padding dalam agar teks tidak sesak */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.8rem; /* Memperkecil ukuran font dasar sedikit */
+    font-weight: 600;
+    transition: all 0.2s ease;
+    flex: 1; /* Membagi rata lebar setiap gamemode */
+    min-width: 0; /* Penting: mencegah elemen meluap keluar (overflow) */
+}
+
+/* Memastikan ukuran ikon proporsional dan tidak merusak layout */
+.tier-cell img {
+    width: 16px; 
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0; /* Mencegah ikon mengecil/gepeng */
+}
+
+/* Mengatur teks nama gamemode agar tidak memakan tempat */
+.tier-cell span:not(.badge) {
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Jika nama terlalu panjang, otomatis menjadi titik-titik (...) */
+    font-size: 0.75rem;
+}
+
+/* Mengatur Badge Tier (LT4, HT4, dll) agar lebih ringkas */
+.badge {
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.tier-cell.unranked {
+    opacity: 0.25;
+}
+
+/* ==========================================================================
+   OPTIMASI KHUSUS MOBILE (KUNCI AGAR TIDAK SCROLL SAMPING)
+   ========================================================================== */
+@media (max-width: 992px) {
+    .leaderboard-row {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .row-main-info {
+        justify-content: space-between;
+        min-width: 100%;
+    }
+
+    /* Di Mobile, kita hilangkan teks nama gamemode (misal: "Sword", "NethPot") 
+       dan HANYA menampilkan [Ikon + Badge Tier] agar 7 gamemode muat dalam satu baris layar HP */
+    .tier-cell span:not(.badge) {
+        display: none !important;
+    }
+
+    .player-tiers-grid {
+        justify-content: space-between;
+        gap: 4px;
+    }
+
+    .tier-cell {
+        padding: 6px 4px;
+        gap: 4px;
+    }
+
+    .player-points {
+        text-align: left;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 10px;
+        margin-top: 2px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .player-points::before {
+        content: "Total Score:";
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+    }
+}
+/* Container Utama Peringkat Baru */
+.leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Baris per Player berbentuk Kartu */
+.leaderboard-row {
+    background: rgba(22, 22, 28, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+}
+
+/* Mengatur Nama & Rank Player */
+.row-main-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 180px;
+}
+
+/* Mengatur Grid Gamemode di Samping Nama */
+.player-tiers-grid {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* Kotak Kecil per Gamemode */
+.tier-cell {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+}
+
+.tier-cell img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+/* ==========================================================================
+   EFEK VISUAL KHUSUS PODIUM TOP 3 (MINIMALIS & ELEGAN)
+   ========================================================================== */
+/* Peringkat 1: Emas (Gold) */
+.podium-gold {
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(22, 22, 28, 0.6) 100%) !important;
+    border-color: rgba(212, 175, 55, 0.3) !important;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+}
+.podium-gold .player-rank {
+    color: #ffd700 !important;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+.podium-gold .player-name {
+    color: #ffd700 !important;
+}
+
+/* Peringkat 2: Perak (Silver) */
+.podium-silver {
+    background: linear-gradient(90deg, rgba(192, 192, 192, 0.06) 0%, rgba(22, 22, 28, 0.6) 100%) !important;
+    border-color: rgba(192, 192, 192, 0.25) !important;
+}
+.podium-silver .player-rank {
+    color: #e0e0e0 !important;
+    text-shadow: 0 0 12px rgba(224, 224, 224, 0.5);
+}
+.podium-silver .player-name {
+    color: #e0e0e0 !important;
+}
+
+/* Peringkat 3: Perunggu (Bronze) */
+.podium-bronze {
+    background: linear-gradient(90deg, rgba(205, 127, 50, 0.05) 0%, rgba(22, 22, 28, 0.6) 100%) !important;
+    border-color: rgba(205, 127, 50, 0.2) !important;
+}
+.podium-bronze .player-rank {
+    color: #cd7f32 !important;
+    text-shadow: 0 0 12px rgba(205, 127, 50, 0.4);
+}
+.podium-bronze .player-name {
+    color: #cd7f32 !important;
+}
+/* ==========================================================================
+   MEDIA QUERIES: FULL MOBILE SUPPORTED LEADERBOARD
+   ========================================================================== */
+
+/* Optimasi untuk Layar Tablet / Laptop Kecil (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .leaderboard-row {
+        padding: 12px 16px;
+        gap: 10px;
+    }
+    .row-main-info {
+        min-width: 150px;
+    }
+    .tier-cell span:not(.badge) {
+        font-size: 0.7rem; /* Mengecilkan teks gamemode sedikit */
+    }
+}
+
+/* Optimasi Mutlak untuk Layar HP / Mobile (Max Width: 768px) */
+@media (max-width: 768px) {
+    /* Mengubah susunan baris menjadi tumpuk vertikal (Card Layout) */
+    .leaderboard-row {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+        gap: 12px;
+        border-radius: 8px;
+    }
+
+    /* Info Utama (Rank & Nama) mengambil baris paling atas */
+    .row-main-info {
+        width: 100%;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 8px;
+    }
+
+    /* Menyembunyikan nama teks gamemode (Sword, UHC, dll) agar hemat ruang di HP */
+    .tier-cell span:not(.badge) {
+        display: none !important;
+    }
+
+    /* Mengatur grid 7 gamemode agar berjejer rapi horizontal memenuhi layar HP */
+    .player-tiers-grid {
+        justify-content: space-between;
+        gap: 4px;
+        width: 100%;
+    }
+
+    /* Kotak per gamemode dioptimalkan hanya untuk Ikon + Badge */
+    .tier-cell {
+        padding: 6px 4px;
+        gap: 3px;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.25);
+    }
+
+    .tier-cell img {
+        width: 18px; /* Ikon sedikit diperbesar agar mudah dilihat di HP */
+        height: 18px;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+        padding: 1px 3px;
+    }
+
+    /* Bagian poin ditaruh di paling bawah kartu dengan label tambahan */
+    .player-points {
+        text-align: right;
+        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between; /* Membuat tulisan "Total Points" di kiri, angka di kanan */
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 8px;
+        margin-top: 4px;
+    }
+
+    /* Memunculkan teks bantuan otomatis "Total Points" khusus di layar HP */
+    .player-points::before {
+        content: "Total Points";
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
+/* Optimasi Tambahan untuk HP Layar Sangat Kecil (Max Width: 380px) */
+@media (max-width: 380px) {
+    .tier-cell img {
+        width: 14px;
+        height: 14px;
+    }
+    .badge {
+        font-size: 0.6rem;
+    }
+}
+
+
+/* ==========================================================================
+   GALAXY THEME OVERRIDE (Added by ChatGPT)
+   ========================================================================== */
+
+:root{
+    --color-bg-darker:#030712;
+    --color-bg-main:#071021;
+    --color-bg-card:rgba(16,22,46,.55);
+    --color-bg-card-hover:rgba(24,34,70,.75);
+    --color-border:rgba(255,255,255,.08);
+    --color-border-hover:rgba(124,92,255,.5);
+    --color-accent:#8B5CF6;
+    --color-accent-rgb:139,92,246;
+    --color-accent-hover:#6D5DF6;
+    --color-accent-glow:rgba(139,92,246,.45);
+}
+
+body{
+background:
+radial-gradient(circle at 20% 20%,rgba(139,92,246,.18),transparent 30%),
+radial-gradient(circle at 80% 0%,rgba(59,130,246,.16),transparent 35%),
+radial-gradient(circle at 50% 100%,rgba(34,211,238,.10),transparent 35%),
+linear-gradient(180deg,#02030b,#061224,#09152f);
+background-attachment:fixed;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background-image:radial-gradient(white 1px,transparent 1px);
+background-size:60px 60px;
+opacity:.14;
+pointer-events:none;
+animation:starsMove 180s linear infinite;
+}
+
+body::after{
+content:"";
+position:fixed;
+inset:-25%;
+background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.12),transparent,rgba(59,130,246,.12),transparent,rgba(34,211,238,.12),transparent);
+filter:blur(90px);
+animation:aurora 20s linear infinite;
+pointer-events:none;
+}
+
+.hero-title{
+background:linear-gradient(90deg,#fff,#b794ff,#60a5fa,#67e8f9);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.card{
+backdrop-filter:blur(20px);
+background:rgba(18,24,48,.48);
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 80px rgba(124,92,255,.22);
+}
+
+.btn-primary{
+background:linear-gradient(135deg,#8B5CF6,#3B82F6);
+box-shadow:0 0 30px rgba(139,92,246,.35);
+}
+
+.navbar{
+background:rgba(5,10,30,.55);
+backdrop-filter:blur(22px);
+}
+
+.hero-glow-1,.hero-glow-2{
+filter:blur(40px);
+}
+
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-thumb{
+background:linear-gradient(#8B5CF6,#3B82F6);
+border-radius:999px;
+}
+
+@keyframes starsMove{
+from{transform:translateY(0)}
+to{transform:translateY(-600px)}
+}
+
+@keyframes aurora{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
