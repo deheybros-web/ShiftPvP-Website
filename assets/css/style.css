@@ -1352,3 +1352,98 @@ a {
         font-size: 0.6rem;
     }
 }
+
+
+/* ==========================================================================
+   GALAXY THEME OVERRIDE (Added by ChatGPT)
+   ========================================================================== */
+
+:root{
+    --color-bg-darker:#030712;
+    --color-bg-main:#071021;
+    --color-bg-card:rgba(16,22,46,.55);
+    --color-bg-card-hover:rgba(24,34,70,.75);
+    --color-border:rgba(255,255,255,.08);
+    --color-border-hover:rgba(124,92,255,.5);
+    --color-accent:#8B5CF6;
+    --color-accent-rgb:139,92,246;
+    --color-accent-hover:#6D5DF6;
+    --color-accent-glow:rgba(139,92,246,.45);
+}
+
+body{
+background:
+radial-gradient(circle at 20% 20%,rgba(139,92,246,.18),transparent 30%),
+radial-gradient(circle at 80% 0%,rgba(59,130,246,.16),transparent 35%),
+radial-gradient(circle at 50% 100%,rgba(34,211,238,.10),transparent 35%),
+linear-gradient(180deg,#02030b,#061224,#09152f);
+background-attachment:fixed;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background-image:radial-gradient(white 1px,transparent 1px);
+background-size:60px 60px;
+opacity:.14;
+pointer-events:none;
+animation:starsMove 180s linear infinite;
+}
+
+body::after{
+content:"";
+position:fixed;
+inset:-25%;
+background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.12),transparent,rgba(59,130,246,.12),transparent,rgba(34,211,238,.12),transparent);
+filter:blur(90px);
+animation:aurora 20s linear infinite;
+pointer-events:none;
+}
+
+.hero-title{
+background:linear-gradient(90deg,#fff,#b794ff,#60a5fa,#67e8f9);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.card{
+backdrop-filter:blur(20px);
+background:rgba(18,24,48,.48);
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 80px rgba(124,92,255,.22);
+}
+
+.btn-primary{
+background:linear-gradient(135deg,#8B5CF6,#3B82F6);
+box-shadow:0 0 30px rgba(139,92,246,.35);
+}
+
+.navbar{
+background:rgba(5,10,30,.55);
+backdrop-filter:blur(22px);
+}
+
+.hero-glow-1,.hero-glow-2{
+filter:blur(40px);
+}
+
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-thumb{
+background:linear-gradient(#8B5CF6,#3B82F6);
+border-radius:999px;
+}
+
+@keyframes starsMove{
+from{transform:translateY(0)}
+to{transform:translateY(-600px)}
+}
+
+@keyframes aurora{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
