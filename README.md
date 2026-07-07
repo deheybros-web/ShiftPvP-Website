@@ -4,65 +4,65 @@
 [![Hosting: Vercel](https://img.shields.io/badge/hosting-vercel-brightgreen.svg)](https://shiftiers.vercel.app)
 [![Language: HTML/CSS/JS](https://img.shields.io/badge/language-HTML%20%7C%20CSS%20%7C%20JS-orange.svg)]()
 
-**Shift PvP** adalah platform peringkat kompetitif dan *tier list* global berbasis web yang dirancang untuk mendata serta menampilkan performa para pemain Minecraft PvP terbaik di berbagai mode permainan (*gamemodes*). 
+Shift PvP is a competitive ranking platform and global tier list web application designed to track and display the performance of top-tier Minecraft PvP players across various gamemodes.
 
-Website ini sepenuhnya dinamis, menggunakan arsitektur pemrosesan data di sisi klien (*client-side data rendering*) untuk menghitung total poin, memperbarui tingkatan (*tier*), dan melakukan pengurutan peringkat (*leaderboard sorting*) secara otomatis berdasarkan file basis data terpusat.
+The website features client-side dynamic data rendering. It automatically calculates total cumulative points, updates player tier badges, and handles leaderboard sorting directly from a centralized database file upon page load.
 
 🔗 **Live Demo:** [shiftiers.vercel.app](https://shiftiers.vercel.app)
 
 ---
 
-## ✨ Fitur Utama
+## Key Features
 
-- **Penyusunan Ranking Otomatis (*Auto-Sorting Leaderboard*):** JavaScript secara otomatis menghitung akumulasi poin dari setiap kompetitor dan mengurutkannya dari peringkat tertinggi ke terendah secara *real-time* saat halaman dimuat.
-- **Visualisasi Badge Tier Premium:** Menampilkan identitas visual tingkatan (*tier badge*) yang responsif dan elegan (dari HT1 hingga LT5) untuk setiap mode permainan.
-- **Arsitektur Data Efisien:** Menggunakan manajemen satu berkas data terpusat (`players.json`) untuk meminimalkan *HTTP network request overhead*, menjaga performa pemuatan halaman tetap instan.
-- **Desain Modern & Responsif:** Antarmuka premium dengan tipografi kelas atas menggunakan font *Plus Jakarta Sans* dan *Space Grotesk*, serta dioptimalkan sepenuhnya untuk perangkat seluler.
-
----
-
-## 🎮 Mode PvP yang Didukung
-
-Sistem poin dihitung secara kumulatif berdasarkan performa terverifikasi pada 7 kategori mode kompetisi berikut:
-1. **Sword** (1.16+ Klasik)
-2. **NethPot** (Netherite Potion)
-3. **Crystal** (End Crystal Meta)
-4. **Mace** (Wind Charge & Smash Mechanics)
-5. **UHC** (Ultra Hardcore Format)
-6. **SMP** (Survival Multiplayer Settings)
-7. **Diamond SMP** (Mid-tier Armor Combat)
+* **Automated Leaderboard Sorting:** JavaScript handles point aggregation for each competitor, sorting the rankings from highest to lowest automatically in real time.
+* **Dynamic Tier Badge Rendering:** Implements responsive visual status badges (ranging from HT1 to LT5) for each individual gamemode.
+* **Optimized Data Architecture:** Utilizes a single tercentralized JSON data file (`players.json`) to minimize HTTP network request overhead and ensure fast page loading times.
+* **Modern & Responsive UI:** Designed with high-end typography utilizing *Plus Jakarta Sans* and *Space Grotesk* fonts, fully optimized for both desktop and mobile layouts.
 
 ---
 
-## 📊 Arsitektur Sistem Poin & Matriks Referensi
+## Supported Gamemodes
 
-Poin global diakumulasikan dari posisi *tier* yang berhasil dicapai oleh pemain menggunakan bobot penilaian sebagai berikut:
+The global ranking points are calculated based on verified placements across 7 distinct PvP combat disciplines:
+1. **Sword** (1.16+ Classic Shield & Axe pacing)
+2. **NethPot** (Netherite Potion combat)
+3. **Crystal** (End Crystal meta and obsidian mechanics)
+4. **Mace** (Vertical combat utilizing Wind Charges)
+5. **UHC** (Ultra Hardcore healing and bow tracking)
+6. **SMP** (Survival Multiplayer dynamic terrain skirmishes)
+7. **Diamond SMP** (Mid-tier armor configurations)
 
-| Tier | Poin | Tier | Poin |
+---
+
+## Point System & Grading Matrix
+
+Global leaderboard points are cumulative and mapped directly from official tiers using the following point distribution matrix:
+
+| Tier | Points | Tier | Points |
 | :--- | :--- | :--- | :--- |
-| **HT1** | 20 Poin | **LT3** | 10 Poin |
-| **LT1** | 18 Poin | **HT4** | 8 Poin |
-| **HT2** | 16 Poin | **LT4** | 6 Poin |
-| **LT2** | 14 Poin | **HT5** | 4 Poin |
-| **HT3** | 12 Poin | **LT5** | 2 Poin |
+| **HT1** | 20 Points | **LT3** | 10 Points |
+| **LT1** | 18 Points | **HT4** | 8 Points |
+| **HT2** | 16 Points | **LT4** | 6 Points |
+| **LT2** | 14 Points | **HT5** | 4 Points |
+| **HT3** | 12 Points | **LT5** | 2 Points |
 
-*Catatan: Status tidak terperingkat atau kosong (`—`) otomatis dihitung sebagai 0 poin.*
+*Note: Unranked slots or empty placeholders (`—`) are automatically assigned a value of 0 points.*
 
 ---
 
-## 📂 Struktur Folder Proyek
+## Repository Structure
 
 ```text
-├── index.html          # Halaman utama aplikasi (Struktur Tabel Dinamis)
-├── players.json        # Basis data terpusat untuk profil dan tier pemain
+├── index.html          # Main application file (Dynamic Table Structure)
+├── players.json        # Centralized JSON database for player profiles and tiers
 ├── rules/
-│   └── rules.html      # Halaman regulasi kompetisi
+│   └── rules.html      # Competition regulations page
 ├── assets/
 │   ├── css/
-│   │   └── style.css   # Main stylesheet & arsitektur desain layout
+│   │   └── style.css   # Main stylesheet containing layout definitions
 │   ├── js/
-│   │   ├── script.js   # Kontrol navigasi UI & efek interaktif mendasar
-│   │   └── ranking.js  # Mesin kalkulasi poin, sorting, dan render DOM tabel
-│   ├── icons/          # Aset ikon visual representasi gamemode (.png)
-│   └── logo/           # Identitas visual brand Shift PvP
-└── README.md           # Dokumentasi repositori proyek
+│   │   ├── script.js   # Basic UI navigation and interactive effects
+│   │   └── ranking.js  # Main script for point calculations, sorting, and DOM rendering
+│   ├── icons/          # Visual assets representing gamemode iconography (.png)
+│   └── logo/           # Shift PvP brand identity assets
+└── README.md           # Repository documentation
