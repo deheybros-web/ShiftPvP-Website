@@ -1,0 +1,11 @@
+{
+  "admins": [
+    {
+      "username": "admin",
+      "password": "ShiftPvPAdminSecure2026!",
+      "displayName": "Operator-01",
+      "role": "administrator",
+      "status": "active"
+    }
+  ]
+}
