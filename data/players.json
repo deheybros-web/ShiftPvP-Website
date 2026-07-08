@@ -2,12 +2,12 @@
   {
     "username": "Apacoba179010",
     "tiers": {
-      "sword": "LT2",
-      "nethpot": "LT1",
-      "crystal": "HT1",
-      "mace": "LT3",
-      "uhc": "HT2",
-      "smp": "LT2",
+      "sword": "LT4",
+      "nethpot": "LT4",
+      "crystal": "HT4",
+      "mace": "LT4",
+      "uhc": "LT4",
+      "smp": "LT4",
       "diasmp": "—"
     }
   },
@@ -128,6 +128,18 @@
       "mace": "—",
       "uhc": "—",
       "smp": "—",
+      "diasmp": "—"
+    }
+  },
+  {
+    "username": "YourNightMareo",
+    "tiers": {
+      "sword": "—",
+      "nethpot": "—",
+      "crystal": "—",
+      "mace": "—",
+      "uhc": "—",
+      "smp": "HT5",
       "diasmp": "—"
     }
   },
