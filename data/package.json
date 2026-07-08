@@ -1,0 +1,14 @@
+{
+  "name": "shiftpvp-admin-core",
+  "version": "1.0.0",
+  "description": "Serverless Content Synchronization Engine for Esports Leaderboards",
+  "main": "api/players.js",
+  "type": "module",
+  "scripts": {
+    "start": "echo 'Run within a Serverless Environment like Vercel or Netlify.' && exit 1"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
