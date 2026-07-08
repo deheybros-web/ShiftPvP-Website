@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftPvP Admin - Terminal Core</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="dashboard-page">
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-glow small"></div>
+                <h2 class="sidebar-brand">SHIFT<span>PVP</span></h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Core Terminal</span>
+                </a>
+                <a href="players.html" class="nav-item">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-label">Player Roster</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="operator-profile">
+                    <div class="operator-avatar" id="operatorAvatar">OP</div>
+                    <div class="operator-info">
+                        <span class="operator-name" id="operatorName">Loading...</span>
+                        <span class="operator-role" id="operatorRole">Access Level: --</span>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="btn btn-logout btn-block">
+                    <span class="btn-icon">🚪</span>
+                    <span class="btn-text">TERMINATE SESSION</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-title-block">
+                    <h1>CORE TERMINAL OVERVIEW</h1>
+                    <p class="subtitle text-gradient">Real-time repository state metrics and synchronization feeds.</p>
+                </div>
+                <div class="header-actions">
+                    <button id="refreshMetricsBtn" class="btn btn-secondary">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">SYNC METRICS</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="metrics-grid">
+                <div class="metric-card glass-panel animate-card">
+                    <div class="card-glow-border"></div>
+                    <div class="metric-header">
+                        <span class="metric-title">TOTAL REGISTERED COMBATANTS</span>
+                        <span class="metric-icon color-cyan">👥</span>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="metricTotalPlayers" class="metric-value">--</h2>
+                    </div>
+                    <div class="metric-footer">
+                        <span class="footer-trend positive">✓ Live Database Records</span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass-panel animate-card">
+                    <div class="card-glow-border"></div>
+                    <div class="metric-header">
+                        <span class="metric-title">APEX COMPETITOR (MAX POINTS)</span>
+                        <span class="metric-icon color-amber">👑</span>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="metricTopPlayer" class="metric-value text-truncate">--</h2>
+                        <span id="metricTopPoints" class="metric-subvalue">-- Points</span>
+                    </div>
+                    <div class="metric-footer">
+                        <span class="footer-trend positive">✦ Dominating the ranks</span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass-panel animate-card">
+                    <div class="card-glow-border"></div>
+                    <div class="metric-header">
+                        <span class="metric-title">UPSTREAM REPOSITORY STATE</span>
+                        <span class="metric-icon color-purple">📦</span>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="metricCommitHash" class="metric-value technical-font">------</h2>
+                        <span id="metricCommitMessage" class="metric-subvalue text-truncate">Fetching tree...</span>
+                    </div>
+                    <div class="metric-footer">
+                        <span id="metricCommitDate" class="footer-trend">--</span>
+                    </div>
+                </div>
+
+                <div class="metric-card glass-panel animate-card">
+                    <div class="card-glow-border"></div>
+                    <div class="metric-header">
+                        <span class="metric-title">ACTIVE OPERATOR ID</span>
+                        <span class="metric-icon color-green">🟢</span>
+                    </div>
+                    <div class="metric-body">
+                        <h2 id="metricAdminName" class="metric-value text-truncate">--</h2>
+                        <span id="metricAdminStatus" class="metric-subvalue status-badge green-glow">ACTIVE CONSOLE</span>
+                    </div>
+                    <div class="metric-footer">
+                        <span class="footer-trend positive">● Session authenticated</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-details glass-panel section-margin">
+                <div class="panel-header">
+                    <h3>SYSTEM METADATA INTEGRITY</h3>
+                </div>
+                <div class="panel-body info-table-container">
+                    <div class="info-row">
+                        <span class="info-label">Repository Core Target</span>
+                        <span id="metaRepo" class="info-value technical-font">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Data Path Target</span>
+                        <span id="metaPath" class="info-value technical-font">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Environment Handshake Status</span>
+                        <span id="metaStatus" class="info-value status-badge green-glow">VERIFIED SYNCED</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script type="module" src="assets/dashboard.js"></script>
+</body>
+</html>
