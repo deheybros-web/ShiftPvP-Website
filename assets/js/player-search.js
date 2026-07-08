@@ -276,12 +276,12 @@
         try {
             const response = await fetch(DATA_URL);
             if (!response.ok) {
-                throw new Error(`Gagal memuat data (Status: ${response.status})`);
+                throw new Error(`Failed to load data (Status: ${response.status})`);
             }
             allPlayers = await response.json();
             dataLoaded = true;
         } catch (error) {
-            console.error("Gagal memuat data player untuk pencarian:", error);
+            console.error("Failed to load data search:", error);
             dataFailed = true;
         }
     }
@@ -388,8 +388,8 @@
         const extra = matches.length - shown.length;
 
         statusBox.textContent = extra > 0
-            ? `${matches.length} player ditemukan (showing the first ${shown.length})`
-            : `${matches.length} player ditemukan`;
+            ? `${matches.length} player found (showing the first ${shown.length})`
+            : `${matches.length} player found`;
         resultsBox.innerHTML = shown.map(p => renderCard(p, query)).join('');
     }
 
