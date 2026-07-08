@@ -1,0 +1,111 @@
+/**
+ * ShiftPvP Admin Console Backend - Edit Player Endpoint
+ * PUT /api/editPlayer
+ * Locates the target player by username (handling potential username changes),
+ * reconstructs tier attributes, recalculates points, and pushes the updated tree upstream.
+ */
+
+import { GitHubRepositoryService } from './github.js';
+
+const TIER_WEIGHTS = {
+    'HT1': 20, 'LT1': 18, 'HT2': 16, 'LT2': 14,
+    'HT3': 12, 'LT3': 10, 'HT4': 8,  'LT4': 6,
+    'HT5': 4,  'LT5': 2,  'NONE': 0
+};
+
+const COMBAT_CATEGORIES = ['Sword', 'Nethpot', 'Crystal', 'UHC', 'Mace', 'SMP', 'Diasmp'];
+
+function calculatePoints(player) {
+    return COMBAT_CATEGORIES.reduce((sum, cat) => {
+        const tier = (player[cat] || 'NONE').toUpperCase();
+        return sum + (TIER_WEIGHTS[tier] || 0);
+    }, 0);
+}
+
+export default async function handler(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+
+    if (req.method !== 'PUT') {
+        res.status(405).json({ success: false, message: 'HTTP Method Not Allowed.' });
+        return;
+    }
+
+    try {
+        const { originalUsername, username, Sword, Nethpot, Crystal, UHC, Mace, SMP, Diasmp } = req.body;
+
+        if (!originalUsername || !username || !username.trim()) {
+            res.status(400).json({ success: false, message: 'Missing structural validation fields: originalUsername and username are required.' });
+            return;
+        }
+
+        const targetNewUsername = username.trim();
+        const githubService = new GitHubRepositoryService();
+
+        // Transaction Lock stage: Fetch current repository state
+        const repoState = await githubService.fetchFileDescriptorTree();
+        let playersCollection = [];
+
+        if (Array.isArray(repoState.decodedJsonPayload)) {
+            playersCollection = repoState.decodedJsonPayload;
+        } else if (repoState.decodedJsonPayload && Array.isArray(repoState.decodedJsonPayload.players)) {
+            playersCollection = repoState.decodedJsonPayload.players;
+        }
+
+        // Find match using case-insensitive lookup
+        const matchedIndex = playersCollection.findIndex(p => p.username.toLowerCase() === originalUsername.toLowerCase().trim());
+        
+        if (matchedIndex === -1) {
+            res.status(404).json({ success: false, message: `Player entry for '${originalUsername}' not found in current matrix.` });
+            return;
+        }
+
+        // Duplicate Guard: If username is changing, ensure new identity is not occupied
+        if (originalUsername.toLowerCase().trim() !== targetNewUsername.toLowerCase()) {
+            const collisionExists = playersCollection.some(p => p.username.toLowerCase() === targetNewUsername.toLowerCase());
+            if (collisionExists) {
+                res.status(409).json({ success: false, message: `Identity '${targetNewUsername}' is already assigned to another entry.` });
+                return;
+            }
+        }
+
+        // Apply mutation parameters cleanly
+        const updatedPlayerRecord = {
+            username: targetNewUsername,
+            Sword: Sword || 'NONE',
+            Nethpot: Nethpot || 'NONE',
+            Crystal: Crystal || 'NONE',
+            UHC: UHC || 'NONE',
+            Mace: Mace || 'NONE',
+            SMP: SMP || 'NONE',
+            Diasmp: Diasmp || 'NONE',
+            points: 0
+        };
+
+        // Automate points transformation engine recalculation
+        updatedPlayerRecord.points = calculatePoints(updatedPlayerRecord);
+
+        // Swap out old array data structure elements atomically
+        playersCollection[matchedIndex] = updatedPlayerRecord;
+
+        // Pushes mutation transaction stream up to the active deployment branch
+        const commitMessage = `chore(roster): update tier metrics for '${targetNewUsername}' [skip ci]`;
+        const writeResult = await githubService.pushContentMutationCommit(
+            playersCollection,
+            repoState.sha,
+            commitMessage
+        );
+
+        res.status(200).json({
+            success: true,
+            message: `Successfully updated player matrix profiles for ${targetNewUsername}.`,
+            commitSha: writeResult.commitSha
+        });
+
+    } catch (error) {
+        console.error("[Edit Player Operational Mutation Failure]:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message || 'Upstream file update transaction thread aborted.' 
+        });
+    }
+}
