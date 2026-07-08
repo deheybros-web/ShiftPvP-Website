@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftPvP | Admin Login</title>
+
+    <!-- Existing CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Login CSS -->
+    <link rel="stylesheet" href="assets/css/login.css">
+
+    <link rel="icon" href="assets/logo/shift.png">
+</head>
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <img src="assets/logo/shift.png" class="logo" alt="ShiftPvP">
+
+        <h1>ShiftPvP</h1>
+        <p class="subtitle">Administrator Login</p>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <label>Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter username"
+                    required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    required>
+            </div>
+
+            <button type="submit" id="loginBtn">
+                Login
+            </button>
+
+            <p id="loginError"></p>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="assets/js/login.js"></script>
+
+</body>
+</html>
