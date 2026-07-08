@@ -337,7 +337,7 @@
                     <span class="search-result-name">${highlight(player.username || '(tanpa nama)', query)}</span>
                     <span class="search-result-points">${totalPoints(player)} pts</span>
                 </div>
-                ${unranked ? '<div class="search-result-note">Belum memiliki tier di kategori manapun &mdash; tidak muncul di leaderboard manapun.</div>' : ''}
+                ${unranked ? '<div class="search-result-note">Dont have tiers in any gamemode category &mdash; Not appeared in any tiers.</div>' : ''}
                 <div class="search-tier-grid">${badgesHtml}</div>
             </div>
         `;
@@ -351,12 +351,12 @@
         const query = (rawQuery || '').trim();
 
         if (!dataLoaded && !dataFailed) {
-            statusBox.textContent = 'Memuat data player...';
+            statusBox.textContent = 'Loading players data';
             resultsBox.innerHTML = '';
             return;
         }
         if (dataFailed) {
-            statusBox.textContent = 'Gagal memuat data player. Coba refresh halaman.';
+            statusBox.textContent = 'Failed loading players data, please refresh web page.';
             resultsBox.innerHTML = '';
             return;
         }
@@ -366,7 +366,7 @@
             return;
         }
         if (query.length < 2) {
-            statusBox.textContent = 'Ketik minimal 2 karakter...';
+            statusBox.textContent = 'Write minimum 2 characters...';
             resultsBox.innerHTML = '';
             return;
         }
@@ -377,7 +377,7 @@
         );
 
         if (matches.length === 0) {
-            statusBox.textContent = `Tidak ada player bernama "${query}"`;
+            statusBox.textContent = `There is no player named "${query}"`;
             resultsBox.innerHTML = '';
             return;
         }
@@ -388,7 +388,7 @@
         const extra = matches.length - shown.length;
 
         statusBox.textContent = extra > 0
-            ? `${matches.length} player ditemukan (menampilkan ${shown.length} pertama)`
+            ? `${matches.length} player ditemukan (showing the first ${shown.length})`
             : `${matches.length} player ditemukan`;
         resultsBox.innerHTML = shown.map(p => renderCard(p, query)).join('');
     }
