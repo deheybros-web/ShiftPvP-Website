@@ -146,3 +146,107 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+/* ==========================================================================
+   6. DYNAMIC LEADERBOARD GENERATOR (MCTIERS & SWIFTIERS LAYOUT)
+   ========================================================================== */
+
+// 1. Definisikan data player langsung di sini (atau ganti dengan sumber data kamu)
+const playersData = [
+    {
+        name: "ProPvPer_1",
+        points: 2450,
+        tiers: { sword: "HT1", nethpot: "LT1", crystal: "HT2", mace: "LT2", uhc: "HT3", smp: "—", diasmp: "HT1" }
+    },
+    {
+        name: "ShadowWalker",
+        points: 2120,
+        tiers: { sword: "LT1", nethpot: "HT2", crystal: "LT1", mace: "—", uhc: "LT2", smp: "HT3", diasmp: "—" }
+    },
+    {
+        name: "CrystalGod",
+        points: 1980,
+        tiers: { sword: "HT3", nethpot: "LT2", crystal: "HT1", mace: "HT1", uhc: "—", smp: "LT1", diasmp: "LT2" }
+    },
+    {
+        name: "ShiftEnjoyer",
+        points: 1540,
+        tiers: { sword: "LT2", nethpot: "HT3", crystal: "LT3", mace: "LT3", uhc: "HT4", smp: "HT4", diasmp: "LT3" }
+    }
+];
+
+// 2. Konfigurasi nama gamemode dan file icon/gambar asetnya
+const gamemodeConfig = {
+    sword: { name: 'Sword', icon: 'assets/icons/sword.png' },
+    nethpot: { name: 'NethPot', icon: 'assets/icons/nethpot.png' },
+    crystal: { name: 'Crystal', icon: 'assets/icons/crystal.png' },
+    mace: { name: 'Mace', icon: 'assets/icons/mace.png' },
+    uhc: { name: 'UHC', icon: 'assets/icons/uhc.png' },
+    smp: { name: 'SMP', icon: 'assets/icons/smp.png' },
+    diasmp: { name: 'Dia SMP', icon: 'assets/icons/diasmp.png' }
+};
+
+// 3. Fungsi utama untuk merender deretan baris leaderboard ke HTML
+function renderNewLeaderboard(playersList) {
+    const container = document.getElementById('leaderboard-rows-container');
+    if (!container) return; // Keluar jika elemen container tidak ditemukan di HTML
+    
+    container.innerHTML = '';
+
+    // Urutkan players berdasarkan poin tertinggi secara otomatis
+    const sortedPlayers = [...playersList].sort((a, b) => b.points - a.points);
+
+    sortedPlayers.forEach((player, index) => {
+        const rank = index + 1;
+        
+        // Buat element baris (row) utama untuk player
+        const row = document.createElement('div');
+        row.className = `leaderboard-row rank-${rank <= 3 ? rank : 'normal'}`;
+
+        // Kolom 1: Profil Player (Rank # dan Nama)
+        const infoCell = document.createElement('div');
+        infoCell.className = 'player-info-cell';
+        infoCell.innerHTML = `
+            <span class="p-rank">#${rank}</span>
+            <span class="p-name">${player.name}</span>
+        `;
+
+        // Kolom 2: Breakdown Tiers Gamemode (Ikon + Nama Mode + Badge Tier)
+        const tiersGrid = document.createElement('div');
+        tiersGrid.className = 'player-tiers-grid';
+
+        // Loop melintasi setiap gamemode yang dikonfigurasi
+        Object.keys(gamemodeConfig).forEach(key => {
+            const mode = gamemodeConfig[key];
+            const playerTier = player.tiers && player.tiers[key] ? player.tiers[key] : '—';
+            const isUnranked = playerTier === '—';
+            const tierClass = isUnranked ? 'tier-unranked' : `tier-${playerTier.toLowerCase()}`;
+
+            const tierItem = document.createElement('div');
+            tierItem.className = 'tier-item';
+            tierItem.innerHTML = `
+                <img src="${mode.icon}" alt="${mode.name}" class="tier-icon" title="${mode.name}">
+                <span class="tier-name">${mode.name}</span>
+                <span class="tier-badge ${tierClass}">${playerTier}</span>
+            `;
+            tiersGrid.appendChild(tierItem);
+        });
+
+        // Kolom 3: Akumulasi Points Global Pemain
+        const pointsCell = document.createElement('div');
+        pointsCell.className = 'player-points-cell';
+        pointsCell.textContent = `${player.points} PTS`;
+
+        // Gabungkan seluruh struktur ke dalam baris utama, lalu masukkan ke container DOM
+        row.appendChild(infoCell);
+        row.appendChild(tiersGrid);
+        row.appendChild(pointsCell);
+        container.appendChild(row);
+    });
+}
+
+// 4. Jalankan fungsi rendering secara otomatis saat halaman web selesai di-load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => renderNewLeaderboard(playersData));
+} else {
+    renderNewLeaderboard(playersData);
+}
