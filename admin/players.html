@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftPvP Admin - Player Roster Matrix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="players-page">
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-glow small"></div>
+                <h2 class="sidebar-brand">SHIFT<span>PVP</span></h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Core Terminal</span>
+                </a>
+                <a href="players.html" class="nav-item active">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-label">Player Roster</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="operator-profile">
+                    <div class="operator-avatar" id="operatorAvatar">OP</div>
+                    <div class="operator-info">
+                        <span class="operator-name" id="operatorName">Loading...</span>
+                        <span class="operator-role" id="operatorRole">Access Level: --</span>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="btn btn-logout btn-block">
+                    <span class="btn-icon">🚪</span>
+                    <span class="btn-text">TERMINATE SESSION</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-title-block">
+                    <h1>PLAYER ROSTER MATRIX</h1>
+                    <p class="subtitle text-gradient">Live tier synchronization engine for active combat categories.</p>
+                </div>
+                <div class="header-actions">
+                    <button id="openAddModalBtn" class="btn btn-primary">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">PROVISION NEW PLAYER</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="control-action-bar glass-panel">
+                <div class="search-input-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="playerSearchInput" placeholder="Live search by operator username..." autocomplete="off">
+                    <div id="searchLoader" class="search-spinner hidden"></div>
+                </div>
+                <button id="refreshPlayersBtn" class="btn btn-secondary">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">RELOAD ROSTER</span>
+                </button>
+            </section>
+
+            <section class="table-container glass-panel">
+                <div id="tableOverlayLoader" class="table-overlay-loader hidden">
+                    <div class="spinner-core"></div>
+                    <p>SYNCHRONIZING WITH REPOSITORY TREE...</p>
+                </div>
+                <div class="table-responsive-wrapper">
+                    <table class="roster-table" id="rosterTable">
+                        <thead>
+                            <tr>
+                                <th>USERNAME</th>
+                                <th>SWORD</th>
+                                <th>NETHPOT</th>
+                                <th>CRYSTAL</th>
+                                <th>UHC</th>
+                                <th>MACE</th>
+                                <th>SMP</th>
+                                <th>DIASMP</th>
+                                <th class="text-center">PTS</th>
+                                <th class="text-right">OPERATIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                            </tbody>
+                    </table>
+                </div>
+                <div id="emptyTableState" class="empty-state-fallback hidden">
+                    <div class="fallback-icon">📡</div>
+                    <h4>NO COMBAT DATA RETURNED</h4>
+                    <p>Adjust search filters or create a new combat file record entry.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="addPlayerModal" class="modal-backdrop hidden">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3>PROVISION NEW PLAYER ENTRY</h3>
+                <button class="close-modal-btn" data-close-modal>✕</button>
+            </div>
+            <form id="addPlayerForm" class="modal-form-core">
+                <div class="form-group row-span-full">
+                    <label for="addUsername">MINECRAFT USERNAME</label>
+                    <input type="text" id="addUsername" required placeholder="Ex: Dream">
+                </div>
+                <div class="tiers-form-grid">
+                    <div class="form-group">
+                        <label for="addSword">SWORD TIER</label>
+                        <select id="addSword" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addNethpot">NETHPOT TIER</label>
+                        <select id="addNethpot" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addCrystal">CRYSTAL TIER</label>
+                        <select id="addCrystal" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUhc">UHC TIER</label>
+                        <select id="addUhc" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addMace">MACE TIER</label>
+                        <select id="addMace" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSmp">SMP TIER</label>
+                        <select id="addSmp" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addDiasmp">DIASMP TIER</label>
+                        <select id="addDiasmp" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group points-display-box">
+                        <label>AUTO CALC POINTS</label>
+                        <div class="calculated-points-value" id="addPointsDisplay">0</div>
+                    </div>
+                </div>
+                <div class="modal-footer-actions">
+                    <button type="button" class="btn btn-secondary" data-close-modal>CANCEL</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">COMMIT TO REPOSITORY</span>
+                        <div class="btn-loader hidden"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editPlayerModal" class="modal-backdrop hidden">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3>MUTATE RECORD: <span id="editPlayerHeadingTarget" class="text-gradient"></span></h3>
+                <button class="close-modal-btn" data-close-modal>✕</button>
+            </div>
+            <form id="editPlayerForm" class="modal-form-core">
+                <input type="hidden" id="editOriginalUsername">
+                <div class="form-group row-span-full">
+                    <label for="editUsername">MINECRAFT USERNAME</label>
+                    <input type="text" id="editUsername" required placeholder="Ex: Dream">
+                </div>
+                <div class="tiers-form-grid">
+                    <div class="form-group">
+                        <label for="editSword">SWORD TIER</label>
+                        <select id="editSword" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editNethpot">NETHPOT TIER</label>
+                        <select id="editNethpot" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCrystal">CRYSTAL TIER</label>
+                        <select id="editCrystal" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUhc">UHC TIER</label>
+                        <select id="editUhc" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMace">MACE TIER</label>
+                        <select id="editMace" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSmp">SMP TIER</label>
+                        <select id="editSmp" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDiasmp">DIASMP TIER</label>
+                        <select id="editDiasmp" class="tier-selector" data-tier-select></select>
+                    </div>
+                    <div class="form-group points-display-box">
+                        <label>AUTO CALC POINTS</label>
+                        <div class="calculated-points-value" id="editPointsDisplay">0</div>
+                    </div>
+                </div>
+                <div class="modal-footer-actions">
+                    <button type="button" class="btn btn-secondary" data-close-modal>CANCEL</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">PUSH MUTATION COMMIT</span>
+                        <div class="btn-loader hidden"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteConfirmationModal" class="modal-backdrop hidden">
+        <div class="modal-card glass-panel modal-alert-card">
+            <div class="alert-header">
+                <span class="alert-icon">⚠️</span>
+                <h3>DESTRUCTIVE ACTION CONFIRMATION</h3>
+            </div>
+            <div class="alert-body">
+                <p>Are you absolutely certain you want to purge operator <strong id="deleteTargetUsernameDisplay" class="color-crimson"></strong> from the active global database record?</p>
+                <p class="warning-subtext">This action triggers an upstream commit and updates the public leaderboard data immediately.</p>
+            </div>
+            <div class="modal-footer-actions structural-gap">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">ABORT MUTATION</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <span class="btn-text">EXECUTE PURGE COMMIT</span>
+                    <div class="btn-loader hidden"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script type="module" src="assets/players.js"></script>
+</body>
+</html>
