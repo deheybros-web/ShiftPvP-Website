@@ -1447,3 +1447,19 @@ to{transform:translateY(-600px)}
 from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
 }
+
+
+/* ===== ShiftPvP Modern Ranking Layout Override ===== */
+.leaderboard-container{display:grid;gap:18px}
+.leaderboard-row{border-radius:16px;padding:18px 22px;background:rgba(20,20,28,.78);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.leaderboard-row:hover{transform:translateY(-4px);border-color:rgba(229,57,85,.35)}
+.player-tiers-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;width:100%}
+.tier-cell{justify-content:center;min-height:42px}
+@media (max-width:768px){
+ .leaderboard-row{padding:14px}
+ .player-tiers-grid{grid-template-columns:repeat(4,1fr)}
+ .player-points{font-size:1rem}
+}
+@media (max-width:480px){
+ .player-tiers-grid{grid-template-columns:repeat(2,1fr)}
+}
