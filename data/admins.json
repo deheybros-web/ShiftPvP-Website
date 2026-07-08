@@ -1,0 +1,19 @@
+{
+  "admins": [
+    {
+      "id": 1,
+      "username": "itstoto_0",
+      "password": "iluvtsyasomuch",
+      "displayName": "ShiftPvP Developer",
+      "role": "Developer",
+      "status": "Active",
+      "permissions": {
+        "dashboard": true,
+        "managePlayers": true,
+        "manageRankings": true,
+        "manageAdmins": true,
+        "manageSettings": true
+      }
+    }
+  ]
+}
