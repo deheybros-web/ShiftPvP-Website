@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/login",
+      "dest": "/api/login.js"
+    },
+    {
+      "src": "/api/players",
+      "dest": "/api/players.js"
+    },
+    {
+      "src": "/api/addPlayer",
+      "dest": "/api/addPlayer.js"
+    },
+    {
+      "src": "/api/editPlayer",
+      "dest": "/api/editPlayer.js"
+    },
+    {
+      "src": "/api/deletePlayer",
+      "dest": "/api/deletePlayer.js"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/$1"
+    }
+  ]
+}
