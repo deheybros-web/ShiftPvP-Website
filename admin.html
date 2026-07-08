@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiftPvP - Admin Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+    :root {
+        --color-bg-darker: #0a0a0c;
+        --color-bg-main: #111115;
+        --color-bg-card: rgba(22, 22, 28, 0.85);
+        --color-bg-card-hover: rgba(30, 30, 38, 0.95);
+        --color-border: rgba(255, 255, 255, 0.08);
+        --color-border-hover: rgba(229, 57, 85, 0.4);
+        --color-text-primary: #ffffff;
+        --color-text-secondary: #a1a1aa;
+        --color-text-muted: #52525b;
+        --color-accent: #e53935;
+        --color-accent-rgb: 229, 57, 85;
+        --color-accent-hover: #f44336;
+        --color-success: #4caf50;
+        --color-warn: #ffb74d;
+        --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        background: var(--color-bg-darker);
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
+        min-height: 100vh;
+        padding: 24px;
+    }
+
+    h1 {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        margin: 0 0 4px 0;
+    }
+
+    .subtitle {
+        color: var(--color-text-secondary);
+        margin-bottom: 24px;
+        font-size: 0.9rem;
+    }
+
+    .card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .card h2 {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        margin: 0 0 14px 0;
+    }
+
+    label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 6px;
+        margin-top: 12px;
+    }
+    label:first-child { margin-top: 0; }
+
+    input[type="text"], input[type="password"], select {
+        width: 100%;
+        background: var(--color-bg-main);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+
+    input:focus, select:focus {
+        border-color: var(--color-border-hover);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s ease, opacity 0.2s ease;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary { background: var(--color-accent); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--color-accent-hover); }
+
+    .btn-secondary { background: rgba(255,255,255,0.08); color: var(--color-text-primary); }
+    .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.14); }
+
+    .btn-danger { background: rgba(229,57,53,0.15); color: #ef5350; border: 1px solid rgba(229,57,53,0.3); }
+    .btn-danger:hover:not(:disabled) { background: rgba(229,57,53,0.28); }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 20px;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .tier-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .status-bar {
+        font-size: 0.85rem;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        display: none;
+    }
+    .status-bar.show { display: block; }
+    .status-info { background: rgba(33,150,243,0.12); color: #64b5f6; border: 1px solid rgba(33,150,243,0.25); }
+    .status-success { background: rgba(76,175,80,0.12); color: #81c784; border: 1px solid rgba(76,175,80,0.25); }
+    .status-error { background: rgba(229,57,53,0.12); color: #ef5350; border: 1px solid rgba(229,57,53,0.25); }
+
+    .player-list {
+        max-height: 560px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .player-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--color-bg-main);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .player-item:hover { background: var(--color-bg-card-hover); border-color: var(--color-border-hover); }
+    .player-item.active { border-color: var(--color-accent); background: rgba(229,57,85,0.08); }
+
+    .player-item-name { font-weight: 700; font-size: 0.9rem; }
+    .player-item-meta { font-size: 0.75rem; color: var(--color-text-muted); }
+
+    .badge-mini {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255,255,255,0.06);
+        color: var(--color-text-muted);
+    }
+    .badge-mini.unranked { color: var(--color-warn); background: rgba(255,183,77,0.12); }
+
+    .log-box {
+        background: var(--color-bg-main);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 12px;
+        font-family: monospace;
+        font-size: 0.78rem;
+        max-height: 160px;
+        overflow-y: auto;
+        color: var(--color-text-secondary);
+        white-space: pre-wrap;
+    }
+
+    .pill {
+        font-size: 0.72rem;
+        padding: 3px 8px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.06);
+        color: var(--color-text-secondary);
+    }
+
+    .locked-overlay {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--color-text-secondary);
+    }
+
+    .search-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .empty-hint {
+        color: var(--color-text-muted);
+        font-size: 0.85rem;
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h1>ShiftPvP &mdash; Admin Dashboard</h1>
+<div class="subtitle">Tambah player baru atau ubah tier player yang sudah ada. Perubahan langsung di-commit ke GitHub.</div>
+
+<div id="statusBar" class="status-bar"></div>
+
+<!-- ==================== LOGIN / TOKEN GATE ==================== -->
+<div id="authCard" class="card">
+    <h2>1. Konfigurasi Repo &amp; Token</h2>
+    <div class="row">
+        <div style="flex:1; min-width:200px;">
+            <label for="repoOwner">Owner / Username GitHub</label>
+            <input type="text" id="repoOwner" value="aoeaoe11212-stack">
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <label for="repoName">Nama Repo</label>
+            <input type="text" id="repoName" value="ShiftPvP-Website">
+        </div>
+    </div>
+    <div class="row">
+        <div style="flex:1; min-width:200px;">
+            <label for="repoBranch">Branch</label>
+            <input type="text" id="repoBranch" value="main">
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <label for="repoPath">Path file JSON</label>
+            <input type="text" id="repoPath" value="data/players.json">
+        </div>
+    </div>
+    <label for="ghToken">GitHub Personal Access Token (fine-grained, scope: Contents read/write untuk repo ini saja)</label>
+    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="row" style="margin-top:14px;">
+        <button class="btn btn-primary" id="btnConnect">Hubungkan &amp; Muat Data</button>
+        <button class="btn btn-secondary" id="btnForgetToken">Lupakan Token</button>
+    </div>
+</div>
+
+<!-- ==================== MAIN DASHBOARD (hidden until connected) ==================== -->
+<div id="dashboard" style="display:none;">
+
+    <div class="card">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+            <span class="pill" id="playerCountPill">0 player</span>
+            <div class="row">
+                <button class="btn btn-secondary" id="btnReload">Reload dari GitHub</button>
+                <button class="btn btn-primary" id="btnCommit">💾 Save &amp; Commit ke GitHub</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <!-- LIST -->
+        <div class="card">
+            <h2>Daftar Player</h2>
+            <input type="text" id="searchBox" class="search-box" placeholder="Cari player...">
+            <div class="player-list" id="playerList"></div>
+        </div>
+
+        <!-- FORM -->
+        <div class="card">
+            <h2 id="formTitle">Tambah Player Baru</h2>
+
+            <label for="formUsername">Username</label>
+            <input type="text" id="formUsername" placeholder="cth: Apacoba179010">
+
+            <div class="tier-grid" id="tierGrid"></div>
+
+            <div class="row" style="margin-top:18px;">
+                <button class="btn btn-primary" id="btnSavePlayer">Simpan ke Daftar (belum commit)</button>
+                <button class="btn btn-secondary" id="btnClearForm">Kosongkan Form</button>
+                <button class="btn btn-danger" id="btnDeletePlayer" style="display:none;">Hapus Player Ini</button>
+            </div>
+            <div class="empty-hint">
+                Tombol di atas cuma mengubah data di memori browser. Perubahan baru benar-benar
+                tersimpan setelah kamu klik <strong>"Save &amp; Commit ke GitHub"</strong> di atas.
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Log Aktivitas</h2>
+        <div class="log-box" id="logBox">Menunggu aktivitas...</div>
+    </div>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    const TIER_OPTIONS = ["—", "HT1","LT1","HT2","LT2","HT3","LT3","HT4","LT4","HT5","LT5"];
+    const GAMEMODES = [
+        { key: "sword",   label: "Sword" },
+        { key: "nethpot", label: "NethPot" },
+        { key: "crystal", label: "Crystal" },
+        { key: "mace",    label: "Mace" },
+        { key: "uhc",     label: "UHC" },
+        { key: "smp",     label: "SMP" },
+        { key: "diasmp",  label: "DiaSMP" }
+    ];
+    const TIER_POINTS = {
+        "HT1": 20, "LT1": 18, "HT2": 16, "LT2": 14, "HT3": 12, "LT3": 10,
+        "HT4": 8,  "LT4": 6,  "HT5": 4,  "LT5": 2,  "—": 0, "unranked": 0
+    };
+
+    const TOKEN_KEY = 'shiftpvp_admin_gh_token'; // sessionStorage: hilang saat tab ditutup
+
+    let players = [];
+    let currentSha = null;   // sha file terakhir dari GitHub, dibutuhkan untuk commit
+    let editingIndex = null; // null = mode tambah baru, angka = mode edit
+
+    const el = (id) => document.getElementById(id);
+
+    /* ---------------------------------------------------------------
+       UI HELPERS
+       --------------------------------------------------------------- */
+    function setStatus(msg, type) {
+        const bar = el('statusBar');
+        bar.textContent = msg;
+        bar.className = 'status-bar show status-' + (type || 'info');
+    }
+    function clearStatus() {
+        el('statusBar').className = 'status-bar';
+    }
+    function log(msg) {
+        const box = el('logBox');
+        const time = new Date().toLocaleTimeString('id-ID');
+        box.textContent = `[${time}] ${msg}\n` + box.textContent;
+    }
+
+    function totalPoints(player) {
+        let total = 0;
+        for (const mode in player.tiers) {
+            const tier = player.tiers[mode] ? player.tiers[mode].trim() : "—";
+            total += TIER_POINTS[tier] || 0;
+        }
+        return total;
+    }
+
+    /* ---------------------------------------------------------------
+       GITHUB API HELPERS
+       --------------------------------------------------------------- */
+    function getConfig() {
+        return {
+            owner: el('repoOwner').value.trim(),
+            repo: el('repoName').value.trim(),
+            branch: el('repoBranch').value.trim() || 'main',
+            path: el('repoPath').value.trim(),
+            token: el('ghToken').value.trim()
+        };
+    }
+
+    function apiHeaders(token) {
+        return {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        };
+    }
+
+    async function fetchPlayersFromGitHub() {
+        const cfg = getConfig();
+        if (!cfg.owner || !cfg.repo || !cfg.path || !cfg.token) {
+            throw new Error('Owner, repo, path, dan token wajib diisi.');
+        }
+        const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}?ref=${cfg.branch}`;
+        const res = await fetch(url, { headers: apiHeaders(cfg.token) });
+
+        if (res.status === 401) throw new Error('Token tidak valid / expired.');
+        if (res.status === 404) throw new Error('File tidak ditemukan. Cek owner/repo/branch/path.');
+        if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+        const json = await res.json();
+        currentSha = json.sha;
+        const decoded = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
+        return JSON.parse(decoded);
+    }
+
+    async function commitPlayersToGitHub(updatedPlayers, message) {
+        const cfg = getConfig();
+        const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+
+        const jsonString = JSON.stringify(updatedPlayers, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+
+        const body = {
+            message: message || `Update players.json via admin dashboard`,
+            content: base64Content,
+            branch: cfg.branch,
+            sha: currentSha
+        };
+
+        const res = await fetch(url, {
+            method: 'PUT',
+            headers: { ...apiHeaders(cfg.token), 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+
+        if (res.status === 409) {
+            throw new Error('CONFLICT: File berubah di GitHub sejak terakhir kamu muat. Klik "Reload dari GitHub" dulu, lalu ulangi perubahanmu.');
+        }
+        if (res.status === 401) throw new Error('Token tidak valid / expired / tidak punya izin write.');
+        if (!res.ok) {
+            const errJson = await res.json().catch(() => ({}));
+            throw new Error(`Gagal commit (${res.status}): ${errJson.message || 'unknown error'}`);
+        }
+
+        const json = await res.json();
+        currentSha = json.content.sha; // update sha supaya commit berikutnya tidak conflict
+        return json;
+    }
+
+    /* ---------------------------------------------------------------
+       RENDER: TIER FORM
+       --------------------------------------------------------------- */
+    function buildTierGrid() {
+        const grid = el('tierGrid');
+        grid.innerHTML = GAMEMODES.map(gm => `
+            <div>
+                <label for="tier_${gm.key}">${gm.label}</label>
+                <select id="tier_${gm.key}">
+                    ${TIER_OPTIONS.map(t => `<option value="${t}">${t === '—' ? 'Unranked (—)' : t}</option>`).join('')}
+                </select>
+            </div>
+        `).join('');
+    }
+
+    function readFormTiers() {
+        const tiers = {};
+        GAMEMODES.forEach(gm => {
+            tiers[gm.key] = el(`tier_${gm.key}`).value;
+        });
+        return tiers;
+    }
+
+    function fillFormWithPlayer(player) {
+        el('formUsername').value = player.username || '';
+        GAMEMODES.forEach(gm => {
+            const val = (player.tiers && player.tiers[gm.key]) || '—';
+            el(`tier_${gm.key}`).value = val;
+        });
+    }
+
+    function clearForm() {
+        el('formUsername').value = '';
+        GAMEMODES.forEach(gm => { el(`tier_${gm.key}`).value = '—'; });
+        editingIndex = null;
+        el('formTitle').textContent = 'Tambah Player Baru';
+        el('btnDeletePlayer').style.display = 'none';
+        renderPlayerList();
+    }
+
+    /* ---------------------------------------------------------------
+       RENDER: PLAYER LIST
+       --------------------------------------------------------------- */
+    function renderPlayerList() {
+        const listEl = el('playerList');
+        const query = el('searchBox').value.trim().toLowerCase();
+
+        const filtered = players
+            .map((p, idx) => ({ p, idx }))
+            .filter(({ p }) => !query || (p.username || '').toLowerCase().includes(query))
+            .sort((a, b) => totalPoints(b.p) - totalPoints(a.p));
+
+        el('playerCountPill').textContent = `${players.length} player`;
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = `<div class="empty-hint">Tidak ada player ditemukan.</div>`;
+            return;
+        }
+
+        listEl.innerHTML = filtered.map(({ p, idx }) => {
+            const pts = totalPoints(p);
+            const unranked = pts === 0;
+            return `
+                <div class="player-item ${editingIndex === idx ? 'active' : ''}" data-idx="${idx}">
+                    <div>
+                        <div class="player-item-name">${escapeHtml(p.username || '(tanpa nama)')}</div>
+                        <div class="player-item-meta">${pts} pts</div>
+                    </div>
+                    <span class="badge-mini ${unranked ? 'unranked' : ''}">${unranked ? 'Unranked' : 'Ranked'}</span>
+                </div>
+            `;
+        }).join('');
+
+        listEl.querySelectorAll('.player-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const idx = parseInt(item.dataset.idx, 10);
+                editingIndex = idx;
+                el('formTitle').textContent = `Edit: ${players[idx].username}`;
+                el('btnDeletePlayer').style.display = 'inline-flex';
+                fillFormWithPlayer(players[idx]);
+                renderPlayerList();
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    /* ---------------------------------------------------------------
+       ACTIONS
+       --------------------------------------------------------------- */
+    async function handleConnect() {
+        clearStatus();
+        setStatus('Menghubungkan ke GitHub...', 'info');
+        try {
+            players = await fetchPlayersFromGitHub();
+            sessionStorage.setItem(TOKEN_KEY, el('ghToken').value.trim());
+            el('dashboard').style.display = 'block';
+            buildTierGrid();
+            clearForm();
+            renderPlayerList();
+            setStatus(`Berhasil memuat ${players.length} player dari GitHub.`, 'success');
+            log(`Berhasil memuat ${players.length} player. SHA: ${currentSha}`);
+        } catch (err) {
+            setStatus(err.message, 'error');
+            log(`ERROR saat memuat: ${err.message}`);
+        }
+    }
+
+    function handleSavePlayerToMemory() {
+        const username = el('formUsername').value.trim();
+        if (!username) {
+            setStatus('Username tidak boleh kosong.', 'error');
+            return;
+        }
+
+        const duplicate = players.findIndex((p, idx) =>
+            idx !== editingIndex && p.username && p.username.toLowerCase() === username.toLowerCase()
+        );
+        if (duplicate !== -1) {
+            setStatus(`Username "${username}" sudah dipakai player lain.`, 'error');
+            return;
+        }
+
+        const tiers = readFormTiers();
+
+        if (editingIndex === null) {
+            players.push({ username, tiers });
+            log(`Player baru ditambahkan ke memori: ${username}`);
+            setStatus(`"${username}" ditambahkan ke daftar (belum di-commit).`, 'success');
+        } else {
+            players[editingIndex] = { username, tiers };
+            log(`Player diubah di memori: ${username}`);
+            setStatus(`"${username}" diperbarui di daftar (belum di-commit).`, 'success');
+        }
+
+        clearForm();
+    }
+
+    function handleDeletePlayer() {
+        if (editingIndex === null) return;
+        const name = players[editingIndex].username;
+        if (!confirm(`Hapus "${name}" dari daftar? (belum di-commit sampai kamu klik Save & Commit)`)) return;
+        players.splice(editingIndex, 1);
+        log(`Player dihapus dari memori: ${name}`);
+        setStatus(`"${name}" dihapus dari daftar (belum di-commit).`, 'success');
+        clearForm();
+    }
+
+    async function handleCommit() {
+        if (!confirm(`Commit ${players.length} player ke GitHub sekarang? Perubahan akan langsung live setelah Vercel selesai deploy.`)) return;
+        setStatus('Mengirim commit ke GitHub...', 'info');
+        try {
+            const commitMsg = `Update players.json via admin dashboard (${players.length} players)`;
+            await commitPlayersToGitHub(players, commitMsg);
+            setStatus('Berhasil commit ke GitHub! Vercel akan auto-deploy dalam beberapa menit.', 'success');
+            log(`Commit berhasil. Total player: ${players.length}`);
+        } catch (err) {
+            setStatus(err.message, 'error');
+            log(`ERROR saat commit: ${err.message}`);
+        }
+    }
+
+    async function handleReload() {
+        setStatus('Memuat ulang dari GitHub...', 'info');
+        try {
+            players = await fetchPlayersFromGitHub();
+            clearForm();
+            renderPlayerList();
+            setStatus(`Berhasil reload ${players.length} player.`, 'success');
+            log('Reload dari GitHub berhasil.');
+        } catch (err) {
+            setStatus(err.message, 'error');
+            log(`ERROR saat reload: ${err.message}`);
+        }
+    }
+
+    function handleForgetToken() {
+        sessionStorage.removeItem(TOKEN_KEY);
+        el('ghToken').value = '';
+        el('dashboard').style.display = 'none';
+        setStatus('Token dilupakan dari sesi ini.', 'info');
+        log('Token dihapus dari sessionStorage.');
+    }
+
+    /* ---------------------------------------------------------------
+       INIT
+       --------------------------------------------------------------- */
+    function init() {
+        buildTierGrid();
+
+        const savedToken = sessionStorage.getItem(TOKEN_KEY);
+        if (savedToken) el('ghToken').value = savedToken;
+
+        el('btnConnect').addEventListener('click', handleConnect);
+        el('btnForgetToken').addEventListener('click', handleForgetToken);
+        el('btnSavePlayer').addEventListener('click', handleSavePlayerToMemory);
+        el('btnClearForm').addEventListener('click', clearForm);
+        el('btnDeletePlayer').addEventListener('click', handleDeletePlayer);
+        el('btnCommit').addEventListener('click', handleCommit);
+        el('btnReload').addEventListener('click', handleReload);
+        el('searchBox').addEventListener('input', renderPlayerList);
+    }
+
+    init();
+})();
+</script>
+
+</body>
+</html>
