@@ -221,7 +221,7 @@
                     <circle cx="11" cy="11" r="7"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="player-search-input" placeholder="Cari nama player..." autocomplete="off">
+                <input type="text" id="player-search-input" placeholder="Search player name..." autocomplete="off">
             </div>
             <div id="player-search-status" class="player-search-status"></div>
             <div id="player-search-results" class="player-search-results"></div>
