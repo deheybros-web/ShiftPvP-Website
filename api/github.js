@@ -6,6 +6,7 @@
 
 export class GitHubRepositoryService {
     constructor() {
+        // Mengambil kredensial dari environment variables di hosting (Vercel/Netlify)
         this.token = process.env.GITHUB_TOKEN;
         this.owner = process.env.GITHUB_OWNER;
         this.repo = process.env.GITHUB_REPO;
@@ -16,20 +17,23 @@ export class GitHubRepositoryService {
     }
 
     /**
-     * Prevents runtime serverless function execution if the host instance is missing environmental configurations
+     * Memastikan semua kunci akses tidak kosong sebelum menembak GitHub API
      */
     validateEnvironmentConfiguration() {
         if (!this.token || !this.owner || !this.repo) {
-            throw new Error("Critical Configuration Exception: Missing essential upstream environmental credentials.");
+            throw new Error(
+                `Critical Configuration Exception: Missing essential upstream environmental credentials. ` +
+                `Missing fields: [ ${!this.token ? 'GITHUB_TOKEN ' : ''}${!this.owner ? 'GITHUB_OWNER ' : ''}${!this.repo ? 'GITHUB_REPO' : ''} ]`
+            );
         }
     }
 
     /**
-     * Compiles standardized request header parameters required to communicate with the GitHub platform
+     * Menyusun susunan header standar untuk request ke GitHub REST API
      */
     getRequestHeaders() {
         return {
-            'Authorization': `Bearer ${this.token}`,
+            'Authorization': `Bearer ${this.token.trim()}`,
             'Accept': 'application/vnd.github.v3+json',
             'Content-Type': 'application/json',
             'User-Agent': 'ShiftPvP-Management-Console-Serverless'
@@ -37,14 +41,13 @@ export class GitHubRepositoryService {
     }
 
     /**
-     * Obtains the target file's current SHA hash signature, raw base64 content stream, and recent commit history trace
+     * Mengambil struktur file terbaru, kode SHA, isi konten Base64, dan log commit terakhir
      */
     async fetchFileDescriptorTree() {
         const fileUrl = `${this.baseUrl}/repos/${this.owner}/${this.repo}/contents/${this.path}`;
         const commitUrl = `${this.baseUrl}/repos/${this.owner}/${this.repo}/commits?path=${this.path}&per_page=1`;
 
         try {
-            // Retrieve file descriptor content payload parameters
             const fileResponse = await fetch(fileUrl, {
                 method: 'GET',
                 headers: this.getRequestHeaders()
@@ -52,14 +55,13 @@ export class GitHubRepositoryService {
 
             if (!fileResponse.ok) {
                 if (fileResponse.status === 404) {
-                    throw new Error(`File target path mapping failure: '${this.path}' does not exist inside the specified repository structure.`);
+                    throw new Error(`File target path mapping failure: '${this.path}' tidak ditemukan di repositori.`);
                 }
-                throw new Error(`Upstream platform connection exception returned status code: ${fileResponse.status}`);
+                throw new Error(`Upstream platform connection exception: HTTP Status ${fileResponse.status}`);
             }
 
             const fileData = await fileResponse.json();
 
-            // Extract the latest commit details from the reference target branch path tree
             let commitMetadata = null;
             try {
                 const commitResponse = await fetch(commitUrl, {
@@ -78,7 +80,7 @@ export class GitHubRepositoryService {
                     }
                 }
             } catch (commitErr) {
-                console.error("[GitHub API Internal Logging Warning] Unresolved commit meta mapping loop:", commitErr);
+                console.warn("[GitHub API Warning] Gagal memetakan metadata commit terakhir:", commitErr);
             }
 
             return {
@@ -93,18 +95,17 @@ export class GitHubRepositoryService {
                 }
             };
         } catch (error) {
-            console.error("[GitHub Service Exception Failure] Error occurred inside execution routine:", error);
+            console.error("[GitHub Service Exception] Terjadi error pada fungsi fetch:", error);
             throw error;
         }
     }
 
     /**
-     * Executes an atomic HTTP PUT content write mutation to establish a brand new repository commit trace line
+     * Melakukan commit perubahan data (add/edit/delete) langsung ke GitHub repo
      */
     async pushContentMutationCommit(updatedJsonPayload, targetTreeSha, commitLogMessage) {
         const fileUrl = `${this.baseUrl}/repos/${this.owner}/${this.repo}/contents/${this.path}`;
         
-        // Minimize whitespace and form valid JSON content parameters prior to base64 structural translation
         const compactJsonString = JSON.stringify(updatedJsonPayload, null, 2);
         const encodedBase64Content = Buffer.from(compactJsonString, 'utf-8').toString('base64');
 
@@ -124,7 +125,7 @@ export class GitHubRepositoryService {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || `Upstream update transaction failed with structural status code: ${response.status}`);
+                throw new Error(data.message || `Mutation failed with status: ${response.status}`);
             }
 
             return {
@@ -133,7 +134,7 @@ export class GitHubRepositoryService {
                 updatedPath: this.path
             };
         } catch (error) {
-            console.error("[GitHub Mutation Critical Pipeline Failure]:", error);
+            console.error("[GitHub Mutation Critical Failure]:", error);
             throw error;
         }
     }
