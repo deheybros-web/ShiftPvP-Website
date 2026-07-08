@@ -66,34 +66,15 @@
                 <div class="title-bar"></div>
             </div>
 
-            <!-- Loader Transisi Visual -->
-            <div id="ranking-loader" style="text-align: center; color: #888; padding: 20px; font-family: 'Space Grotesk', sans-serif;">
-                <span style="display: inline-block; animation: pulse 1.5s infinite;">Loading Leaderboard Data...</span>
-            </div>
-
-            <div class="card leaderboard-card table-card scroll-reveal">
-                <div class="table-wrapper responsive-table">
-                    <table class="data-table tracking-table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Player Name</th>
-                                <th class="text-center"><img src="assets/icons/sword.png" alt="Sword" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/nethpot.png" alt="NethPot" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/crystal.png" alt="Crystal" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/mace.png" alt="Mace" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/uhc.png" alt="UHC" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/smp.png" alt="SMP" class="mode-icon"></th>
-                                <th class="text-center"><img src="assets/icons/diasmp.png" alt="Diamond SMP" class="mode-icon"></th>
-                                <th class="text-right">Total Points</th>
-                            </tr>
-                        </thead>
-                        <!-- ID ditambahkan di sini agar dibaca oleh ranking.js -->
-                        <tbody id="leaderboard-rows-container">
-                            <!-- Data player akan disuntikkan secara dinamis oleh JavaScript -->
-                        </tbody>
-                    </table>
+            <div class="leaderboard-wrapper scroll-reveal">
+                <div class="leaderboard-header-row">
+                    <div class="hdr-player">Player</div>
+                    <div class="hdr-modes">Gamemode Tiers Breakdown</div>
+                    <div class="hdr-points">Points</div>
                 </div>
+
+                <div id="leaderboard-rows-container" class="leaderboard-rows-container">
+                    </div>
             </div>
         </div>
     </section>
