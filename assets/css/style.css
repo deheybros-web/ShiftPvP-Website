@@ -1463,3 +1463,156 @@ to{transform:rotate(360deg)}
 @media (max-width:480px){
  .player-tiers-grid{grid-template-columns:repeat(2,1fr)}
 }
+/* ==========================================================================
+   NEW LEADERBOARD LAYOUT (MCTIERS / SWIFTIERS STYLE)
+   ========================================================================== */
+.leaderboard-wrapper {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Header Row Desktop */
+.leaderboard-header-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 100px;
+    padding: 14px 24px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.hdr-points { text-align: right; }
+
+/* Individual Player Row */
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 100px;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s ease, transform 0.2s ease;
+    background: rgba(22, 22, 28, 0.2);
+}
+.leaderboard-row:last-child { border-bottom: none; }
+.leaderboard-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid var(--color-accent);
+    padding-left: 21px; /* Kompensasi border kiri */
+}
+
+/* Bagian Kiri: Info Utama Player */
+.player-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.p-rank {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    min-width: 35px;
+}
+.p-name {
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+}
+
+/* Bagian Tengah: Tiers Grid Flex (Kunci utama mctiers) */
+.player-tiers-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+}
+.tier-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.tier-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+.tier-name {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+.tier-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+/* Bagian Kanan: Global Points */
+.player-points-cell {
+    text-align: right;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-accent);
+    font-size: 1.1rem;
+}
+
+/* Variasi Warna Tier Badge (Contoh standard PvP Tiers) */
+.tier-ht1, .tier-lt1 { background: #ff3333; color: #fff; box-shadow: 0 0 8px rgba(255,51,51,0.3); }
+.tier-ht2, .tier-lt2 { background: #ff9933; color: #fff; }
+.tier-ht3, .tier-lt3 { background: #ffcc00; color: #000; }
+.tier-ht4, .tier-lt4 { background: #33cc33; color: #fff; }
+.tier-ht5, .tier-lt5 { background: #3399ff; color: #fff; }
+.tier-unranked { background: #52525b; color: var(--color-text-secondary); opacity: 0.5; }
+
+/* Podium Highlights untuk Top 3 */
+.rank-1 { border-left: 3px solid #ffd700; background: rgba(255, 215, 0, 0.02); }
+.rank-2 { border-left: 3px solid #c0c0c0; background: rgba(192, 192, 192, 0.02); }
+.rank-3 { border-left: 3px solid #cd7f32; background: rgba(205, 127, 50, 0.02); }
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS RULES
+   ========================================================================== */
+@media (max-width: 992px) {
+    .leaderboard-header-row { display: none; } /* Sembunyikan header tabel di mobile */
+    
+    .leaderboard-row {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .player-info-cell {
+        grid-column: 1;
+    }
+    
+    .player-points-cell {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .player-tiers-grid {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+        gap: 6px;
+    }
+
+    /* Di layar HP kecil, sembunyikan nama gamemode, biarkan Ikon + Badge saja agar muat */
+    .tier-name {
+        display: none;
+    }
+    .tier-item {
+        padding: 4px 6px;
+    }
+}
